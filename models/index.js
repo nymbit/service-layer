@@ -20,13 +20,7 @@ if (process.env.DATABASE_URL) {
 }
 
 const models = {
-  User: sequelize.import("./user"),
-  PricePoint: sequelize.import("./pricepoint"),
-  Event: sequelize.import("./event"),
-  State: sequelize.import("./state"),
-  Profile: sequelize.import("./profile"),
-  Entry: sequelize.import("./entry"),
-  Exit: sequelize.import("./exit"),
+  User: sequelize.import("./user")
 };
 
 Object.keys(models).forEach((key) => {

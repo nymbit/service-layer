@@ -14,8 +14,8 @@ const resolvers = {
     user: async (parent, { id }, { models }) => {
       return await models.User.findByPk(id);
     },
-    me: async (parent, args, { models, me }) => {
-      return await models.User.findByPk(me.id);
+    currentUser: async (parent, args, { models, currentUser }) => {
+      return await models.User.findByPk(currentUser.id);
     },
   },
 

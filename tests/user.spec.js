@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const { expect } = require("chai");
-const { signIn, deleteUser, getUser, signUp } = require("./api");
+const { signIn, deleteUser, getUser, signUp } = require("./API/user");
 
 describe("users", () => {
   describe("signUp(username: String!, password: String! ...): Token", () => {
@@ -64,21 +64,5 @@ describe("users", () => {
       } = await deleteUser({ id: "1" }, token);
       expect(errors[0].message).to.eql("Not authorized as admin.");
     });
-    // it("successfully deletes user", async () => {
-    //   const {
-    //     data: {
-    //       data: {
-    //         signIn: { token },
-    //       },
-    //     },
-    //   } = await signIn({
-    //     login: "matthew",
-    //     password: "matthew",
-    //   });
-    //   const {
-    //     data: { errors },
-    //   } = await deleteUser({ id: "2" }, token);
-    //   expect(errors[0].message).to.eql("Not authorized as admin.");
-    // });
   });
 });

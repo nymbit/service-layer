@@ -76,7 +76,7 @@ const seedDatabase = async () => {
     password: "matthew",
     firstName: "matthew",
     lastName: "troost",
-    cellNumber: "27832904933",
+    cellNumber: "27832902933",
     birthDate: "1996-06-17"
   });
 

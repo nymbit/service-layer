@@ -1,37 +1,52 @@
-const axios = require('axios');
+const axios = require("axios");
 
-const API_URL = 'http://localhost:8000/graphql';
+const API_URL = "http://localhost:8000/graphql";
 
-const signIn = async (variables) => axios.post(API_URL, {
-  query: `
+const signUp = async (variables) =>
+  axios.post(API_URL, {
+    query: `
+      mutation ($username: String!, $password: String!, $email: String!, $firstName: String!, $lastName: String!, $cellNumber: String!, $birthDate: String!) {
+        signUp(username: $username, password: $password, email: $email, firstName: $firstName, lastName: $lastName, cellNumber: $cellNumber, birthDate: $birthDate) {
+          token
+        }
+      }
+    `,
+    variables,
+  });
+
+const signIn = async (variables) =>
+  axios.post(API_URL, {
+    query: `
       mutation ($login: String!, $password: String!) {
         signIn(login: $login, password: $password) {
           token
         }
       }
     `,
-  variables,
-});
+    variables,
+  });
 
-const deleteUser = async (variables, token) => axios.post(
-  API_URL,
-  {
-    query: `
+const deleteUser = async (variables, token) =>
+  axios.post(
+    API_URL,
+    {
+      query: `
         mutation ($id: ID!) {
           deleteUser(id: $id)
         }
       `,
-    variables,
-  },
-  {
-    headers: {
-      'x-token': token,
+      variables,
     },
-  },
-);
+    {
+      headers: {
+        "x-token": token,
+      },
+    }
+  );
 
-const getUser = async (variables) => axios.post(API_URL, {
-  query: `
+const getUser = async (variables) =>
+  axios.post(API_URL, {
+    query: `
       query ($id: ID!) {
         user(id: $id) {
           id
@@ -40,7 +55,7 @@ const getUser = async (variables) => axios.post(API_URL, {
         }
       }
     `,
-  variables,
-});
+    variables,
+  });
 
-module.exports = { signIn, deleteUser, getUser };
+module.exports = { signIn, deleteUser, getUser, signUp };

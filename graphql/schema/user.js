@@ -15,7 +15,7 @@ const user = gql`
       firstName: String!
       lastName: String!
       cellNumber: String!
-      birthDate: Date!
+      birthDate: String!
     ): Token!
 
     signIn(login: String!, password: String!): Token!

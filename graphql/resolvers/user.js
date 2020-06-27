@@ -1,10 +1,10 @@
-const jwt = require('jsonwebtoken');
-const { combineResolvers } = require('graphql-resolvers');
-const { AuthenticationError, UserInputError } = require('apollo-server');
-const { isAdmin } = require('./authorization');
+const auth = require("../../utils/authentication")
+const { combineResolvers } = require("graphql-resolvers");
+const { AuthenticationError, UserInputError } = require("apollo-server");
+const { isAdmin } = require("./authorization");
 
 //resolver map
-//each resolver has 4 arguments (parent, args, context, info). 
+//each resolver has 4 arguments (parent, args, context, info).
 //Can inject dependencies for the resolver via context
 const resolvers = {
   Query: {
@@ -20,35 +20,22 @@ const resolvers = {
   },
 
   Mutation: {
-    signUp: async (
-      parent,
-      { username, email, password },
-      { models, secret },
-    ) => {
+    signUp: async (parent, args, { models }) => {
       const user = await models.User.create({
-        username,
-        email,
-        password,
+        ...args,
       });
-      return { token: createToken(user, secret, '30m') };
+      return { token: auth.createToken(user, "30m") };
     },
 
-    signIn: async (
-      parent,
-      { login, password },
-      { models, secret },
-    ) => {
-      const user = await models.User.findByLogin(login); //login is either username or password
-      if (!user) {
-        throw new UserInputError(
-          'No user found with these login credentials.',
-        );
-      }
-      const isValid = await user.validatePassword(password);
-      if (!isValid) {
-        throw new AuthenticationError('Invalid password.');
-      }
-      return { token: createToken(user, secret, '30m') };
+    signIn: async (parent, { login, password }, { models }) => {
+      const user = await models.User.findByLogin(login); //login is either username or email
+      if (!user)
+        throw new UserInputError("No user found with these login credentials.");
+
+      if (!(await user.validatePassword(password)))
+        throw new AuthenticationError("Invalid password.");
+
+      return { token: auth.createToken(user, "30m") };
     },
 
     deleteUser: combineResolvers(
@@ -57,13 +44,20 @@ const resolvers = {
         return await models.User.destroy({
           where: { id },
         });
-      },
+      }
     ),
   },
 
   User: {
-    messages: async (user, args, { models }) => {
-      return await models.Message.findAll({
+    roles: async (user, args, { models }) => {
+      return await models.UserRole.findAll({
+        where: {
+          userId: user.id,
+        },
+      });
+    },
+    attachments: async (user, args, { models }) => {
+      return await models.UserAttachment.findAll({
         where: {
           userId: user.id,
         },
@@ -72,11 +66,4 @@ const resolvers = {
   },
 };
 
-const createToken = async (user, secret, expiresIn) => {
-  const { id, email, username, role } = user;
-  return await jwt.sign({ id, email, username, role }, secret, {
-    expiresIn,
-  });
-};
-
-module.exports = resolvers
+module.exports = resolvers;

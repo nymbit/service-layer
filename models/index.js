@@ -1,6 +1,7 @@
 "use strict";
 const Sequelize = require("sequelize");
 const Umzug = require("umzug");
+const userAttachment = require("./userAttachment");
 
 let sequelize;
 if (process.env.DATABASE_URL) {
@@ -20,7 +21,9 @@ if (process.env.DATABASE_URL) {
 }
 
 const models = {
-  User: sequelize.import("./user")
+  User: sequelize.import("./user"),
+  UserRole: sequelize.import("./userRole"),
+  UserAttachment: sequelize.import("./userAttachment")
 };
 
 Object.keys(models).forEach((key) => {
@@ -31,7 +34,7 @@ Object.keys(models).forEach((key) => {
 
 const umzug = new Umzug({
   migrations: {
-    path: "./migrations",
+    path: "./models/migrations",
     params: [sequelize.getQueryInterface()],
   },
   // indicates that the migration data should be store in the database

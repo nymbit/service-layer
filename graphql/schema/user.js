@@ -1,12 +1,10 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require("apollo-server-express");
 
-//schema =  all the available data for reading and writing data via GraphQL.
 const user = gql`
-extend type Query {
+  extend type Query {
     users: [User!]
     user(id: ID!): User
-    me: User,
-    role: String
+    currentUser: User
   }
 
   extend type Mutation {
@@ -14,23 +12,31 @@ extend type Query {
       username: String!
       email: String!
       password: String!
+      firstName: String!
+      lastName: String!
+      cellNumber: String!
+      birthDate: Date!
     ): Token!
-    
+
     signIn(login: String!, password: String!): Token!
 
     deleteUser(id: ID!): Boolean!
   }
 
-  #----- FIELDS -----
   type Token {
     token: String!
   }
-  
+
   type User {
     id: ID!
     username: String!
     email: String!
-    messages: [Message!]
+    firstName: String!
+    lastName: String!
+    cellNumber: String!
+    birthDate: Date!
+    roles: [UserRole!]
+    attachments: [UserAttachment]
   }
 `;
 

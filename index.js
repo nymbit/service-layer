@@ -1,9 +1,8 @@
 require("dotenv/config");
 const express = require("express");
 const http = require("http");
-const jwt = require("jsonwebtoken");
 const DataLoader = require("dataloader");
-const { ApolloServer, AuthenticationError } = require("apollo-server-express");
+const { ApolloServer } = require("apollo-server-express");
 const schema = require("./graphql/schema");
 const resolvers = require("./graphql/resolvers");
 const { models, sequelize } = require("./models");
@@ -29,12 +28,7 @@ const server = new ApolloServer({
   context: async ({ req, connection }) => {
     // this function is hit everytime a request is made to the server
     let all_loaders = {
-      pricePoint: new DataLoader((keys) =>
-        loaders.batchPricePoints(keys, models)
-      ),
       user: new DataLoader((keys) => loaders.batchUsers(keys, models)),
-      profile: new DataLoader((keys) => loaders.batchProfiles(keys, models)),
-      entry: new DataLoader((keys) => loaders.batchEntries(keys, models)),
     };
 
     if (connection) {
@@ -48,7 +42,6 @@ const server = new ApolloServer({
       return {
         models,
         currentUser: await auth.getCurrentUser(req),
-        secret: process.env.SECRET,
         loaders: all_loaders,
       };
     }
@@ -65,9 +58,9 @@ const isTest = !!process.env.TEST_DATABASE;
 const port = process.env.PORT || 8000; //heroku environment variable (merged on deploy)
 
 sequelize.sync({ force: isTest }).then(async () => {
-  if (isTest) {
+ if (isTest) {
     seedDatabase();
-  }
+ }
 
   httpServer.listen({ port }, () => {
     console.log(
@@ -77,10 +70,18 @@ sequelize.sync({ force: isTest }).then(async () => {
 });
 
 const seedDatabase = async () => {
-  await models.User.create({
+  let user = await models.User.create({
     username: "matthew",
     email: "matt@test.com",
     password: "matthew",
-    role: "ADMIN",
+    firstName: "matthew",
+    lastName: "troost",
+    cellNumber: "27832904933",
+    birthDate: "1996-06-17"
   });
+
+  await models.UserRole.create({
+    role: "ADMIN",
+    userId: user.id
+  })
 };

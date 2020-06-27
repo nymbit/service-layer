@@ -1,15 +1,16 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const user = (sequelize, DataTypes) => {
-  const User = sequelize.define('user', {
+  const User = sequelize.define("user", {
     username: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
       validate: {
-        notEmpty: {
+        notEmpty: true,
+        isLowercase: {
           args: true,
-          msg: 'A user needs to have a username',
+          msg: "Username must be lowercase.",
         },
       },
     },
@@ -27,19 +28,51 @@ const user = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: true,
-        len: [7, 42],
+        len: {
+          args: [7, 42],
+          msg: "Password must be between 7 and 42 characters.",
+        },
       },
     },
-    role: {
+    cellNumber: {
       type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        isAlpha: true,
+      },
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        isAlpha: true,
+      },
+    },
+    birthDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        isDate: true,
+      },
     },
   });
 
-  User.associate = models => {
-    User.hasMany(models.Message, { onDelete: 'CASCADE' });
+  User.associate = (models) => {
+    User.hasMany(models.UserRole, { onDelete: "CASCADE" }),
+    User.hasMany(models.UserAttachment, { onDelete: "CASCADE" })
   };
 
-  User.findByLogin = async login => {
+  User.findByLogin = async (login) => {
     let user = await User.findOne({
       where: { username: login },
     });
@@ -52,20 +85,21 @@ const user = (sequelize, DataTypes) => {
   };
 
   //hook
-  User.beforeCreate(async user => {
+  User.beforeCreate(async (user) => {
     user.password = await user.generatePasswordHash();
   });
 
-  User.prototype.generatePasswordHash = async function() { //added to the user's property chain
+  User.prototype.generatePasswordHash = async function () {
+    //added to the user's property chain
     const saltRounds = 10;
     return await bcrypt.hash(this.password, saltRounds);
   };
 
-  User.prototype.validatePassword = async function(password) {
+  User.prototype.validatePassword = async function (password) {
     return await bcrypt.compare(password, this.password);
   };
 
   return User;
 };
 
-module.exports = user
+module.exports = user;

@@ -1,6 +1,4 @@
-const { gql } = require('apollo-server-express');
-
-const userSchema = require('./user');
+const { gql } = require("apollo-server-express");
 
 const linkSchema = gql`
   scalar Date
@@ -15,4 +13,9 @@ const linkSchema = gql`
     _: Boolean
   }
 `;
-module.exports = [linkSchema, userSchema];
+module.exports = [
+  linkSchema,
+  require("./user"),
+  require("./userRole"),
+  require("./userAttachment"),
+];

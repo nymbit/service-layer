@@ -1,11 +1,18 @@
-const { GraphQLDateTime } = require('graphql-iso-date');
+const { GraphQLDateTime } = require("graphql-iso-date");
 
-const userResolvers = require('./user');
-const userRoleResolvers = require('./userRole');
-const userAttachmentResolvers = require('./userAttachment');
+const userResolvers = require("./user");
+const userRoleResolvers = require("./userRole");
+const userAttachmentResolvers = require("./userAttachment");
+const accountResolvers = require("./account");
 
 const customScalarResolver = {
-    Date: GraphQLDateTime,
-  };
+  Date: GraphQLDateTime,
+};
 
-module.exports = [customScalarResolver, userResolvers, userRoleResolvers, userAttachmentResolvers];
+module.exports = [
+  customScalarResolver,
+  userResolvers,
+  userRoleResolvers,
+  userAttachmentResolvers,
+  accountResolvers,
+];

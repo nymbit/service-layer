@@ -18,4 +18,5 @@ module.exports = [
   require("./user"),
   require("./userRole"),
   require("./userAttachment"),
+  require("./account")
 ];

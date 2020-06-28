@@ -29,6 +29,7 @@ const server = new ApolloServer({
     // this function is hit everytime a request is made to the server
     let all_loaders = {
       user: new DataLoader((keys) => loaders.batchUsers(keys, models)),
+      account: new DataLoader((keys) => loaders.batchAccounts(keys, models)),
     };
 
     if (connection) {

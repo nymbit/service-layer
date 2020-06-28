@@ -4,6 +4,7 @@ const userResolvers = require("./user");
 const userRoleResolvers = require("./userRole");
 const userAttachmentResolvers = require("./userAttachment");
 const accountResolvers = require("./account");
+const paymentMethodResolvers = require("./paymentMethod");
 
 const customScalarResolver = {
   Date: GraphQLDateTime,
@@ -15,4 +16,5 @@ module.exports = [
   userRoleResolvers,
   userAttachmentResolvers,
   accountResolvers,
+  paymentMethodResolvers
 ];

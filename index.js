@@ -30,6 +30,10 @@ const server = new ApolloServer({
     let all_loaders = {
       user: new DataLoader((keys) => loaders.batchUsers(keys, models)),
       account: new DataLoader((keys) => loaders.batchAccounts(keys, models)),
+      paymentMethod: new DataLoader((keys) => loaders.batchPaymentMethods(keys, models)),
+      userAttachment: new DataLoader((keys) => loaders.batchUserAttachments(keys, models)),
+      userRole: new DataLoader((keys) => loaders.batchUserRoles(keys, models)),
+      tag: new DataLoader((keys) => loaders.batchTags(keys, models)),
     };
 
     if (connection) {

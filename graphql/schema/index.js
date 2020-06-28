@@ -19,5 +19,6 @@ module.exports = [
   require("./userRole"),
   require("./userAttachment"),
   require("./account"),
-  require("./tag")
+  require("./tag"),
+  require("./paymentMethod")
 ];

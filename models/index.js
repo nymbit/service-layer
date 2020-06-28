@@ -24,7 +24,8 @@ const models = {
   UserRole: sequelize.import("./userRole"),
   UserAttachment: sequelize.import("./userAttachment"),
   Account: sequelize.import("./account"),
-  Tag: sequelize.import("./tag")
+  Tag: sequelize.import("./tag"),
+  PaymentMethod: sequelize.import("./paymentMethod")
 };
 
 Object.keys(models).forEach((key) => {

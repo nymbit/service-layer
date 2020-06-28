@@ -12,7 +12,7 @@ const tag = gql`
       name: String!
     ): Tag!
 
-    updateTag(paymentMethodId: String, name: String, blocked: Boolean): Tag!
+    updateTag(id: ID!, paymentMethodId: String, name: String, blocked: Boolean): Tag!
 
     deleteTag(id: ID!): Boolean!
   }

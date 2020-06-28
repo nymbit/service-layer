@@ -38,7 +38,7 @@ const resolvers = {
       if (!(await user.validatePassword(password)))
         throw new AuthenticationError("Invalid password.");
 
-      return { token: auth.createToken(user, "30m") };
+      return { token: auth.createToken(user, account, "30m") };
     },
 
     deleteUser: combineResolvers(

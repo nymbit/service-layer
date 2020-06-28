@@ -14,7 +14,8 @@ describe("users", () => {
         cellNumber: "27823469544",
         birthDate: "1995-02-04",
       });
-      expect(result.data.data)
+      expect(result.data)
+        .to.haveOwnProperty("data")
         .to.haveOwnProperty("signUp")
         .to.haveOwnProperty("token")
         .to.be.a("string");
@@ -62,7 +63,7 @@ describe("users", () => {
       const {
         data: { errors },
       } = await deleteUser({ id: "1" }, token);
-      expect(errors[0].message).to.eql("Not authorized as admin.");
+      expect(errors[0].message).to.eql("Restricted to users with ADMIN rights.");
     });
   });
 });

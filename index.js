@@ -7,7 +7,7 @@ const schema = require("./graphql/schema");
 const resolvers = require("./graphql/resolvers");
 const { models, sequelize } = require("./models");
 const loaders = require("./graphql/loaders");
-const auth = require("./utils/authentication")
+const auth = require("./utils/authentication");
 
 const app = express();
 
@@ -54,14 +54,14 @@ server.applyMiddleware({ app, path: "/graphql" });
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
-const isTest = !!process.env.TEST_DATABASE;
+const isTest = !!process.env.TEST_DATABASE || true;
 
 const port = process.env.PORT || 8000; //heroku environment variable (merged on deploy)
 
 sequelize.sync({ force: isTest }).then(async () => {
- if (isTest) {
+  if (isTest) {
     seedDatabase();
- }
+  }
 
   httpServer.listen({ port }, () => {
     console.log(
@@ -78,11 +78,15 @@ const seedDatabase = async () => {
     firstName: "matthew",
     lastName: "troost",
     cellNumber: "27832902933",
-    birthDate: "1996-06-17"
+    birthDate: "1996-06-17",
   });
 
   await models.UserRole.create({
     role: "ADMIN",
-    userId: user.id
-  })
+    userId: user.id,
+  });
+
+  await models.Account.create({
+    userId: user.id,
+  });
 };

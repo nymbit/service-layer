@@ -1,4 +1,4 @@
-const auth = require("../../utils/authentication")
+const auth = require("../../utils/authentication");
 const { combineResolvers } = require("graphql-resolvers");
 const { AuthenticationError, UserInputError } = require("apollo-server");
 const { isAdmin } = require("./authorization");
@@ -24,6 +24,9 @@ const resolvers = {
       const user = await models.User.create({
         ...args,
       });
+
+      await models.Account.create({ userId: user.id });
+
       return { token: auth.createToken(user, "30m") };
     },
 

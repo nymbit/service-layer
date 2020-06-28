@@ -23,7 +23,8 @@ const models = {
   User: sequelize.import("./user"),
   UserRole: sequelize.import("./userRole"),
   UserAttachment: sequelize.import("./userAttachment"),
-  Account: sequelize.import("./account")
+  Account: sequelize.import("./account"),
+  Tag: sequelize.import("./tag")
 };
 
 Object.keys(models).forEach((key) => {

@@ -18,5 +18,6 @@ module.exports = [
   require("./user"),
   require("./userRole"),
   require("./userAttachment"),
-  require("./account")
+  require("./account"),
+  require("./tag")
 ];

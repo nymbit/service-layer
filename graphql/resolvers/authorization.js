@@ -27,10 +27,10 @@ const isAccountOwner = async (parent, { id }, { currentUser, models }) => {
 
 const isPaymentMethodOwner = async (
   parent,
-  { id },
+  { id, paymentMethodId },
   { currentUser, models }
 ) => {
-  const paymentMethod = await models.PaymentMethod.findByPk(id, {
+  const paymentMethod = await models.PaymentMethod.findByPk(id || paymentMethodId, {
     include: models.Account,
   });
 
@@ -43,7 +43,7 @@ const isPaymentMethodOwner = async (
 };
 
 const isTagOwner = async (parent, { id }, { currentUser, models }) => {
-  const tag = await models.Tag.findByPk(id, { include: Account });
+  const tag = await models.Tag.findByPk(id, { include: models.Account });
 
   if (!tag) return new ValidationError("Tag does not exist.");
 

@@ -36,7 +36,7 @@ describe("accounts", () => {
       expect(result.data).to.eql(expectedResult);
     });
 
-    it("returns null when account cannot be found", async () => {
+    it("returns error when not the owner of the account", async () => {
       const {
         data: { errors },
       } = await getAccount({ id: "42" }, this.token);
@@ -62,7 +62,7 @@ describe("accounts", () => {
         "Restricted to users with ADMIN rights."
       );
     });
-    it("returns a list of accounts with one item", async () => {
+    it("returns a list of accounts", async () => {
       const expectedResult = {
         data: {
           accounts: [

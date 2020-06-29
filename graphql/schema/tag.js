@@ -8,11 +8,11 @@ const tag = gql`
 
   extend type Mutation {
     createTag(
-      paymentMethodId: String!
+      paymentMethodId: Int!
       name: String!
     ): Tag!
 
-    updateTag(id: ID!, paymentMethodId: String, name: String, blocked: Boolean): Tag!
+    updateTag(id: ID!, paymentMethodId: Int, name: String, blocked: Boolean): Tag!
 
     deleteTag(id: ID!): Boolean!
   }

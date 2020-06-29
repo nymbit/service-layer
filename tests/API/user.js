@@ -3,7 +3,7 @@ const axios = require("axios");
 const API_URL = "http://localhost:8000/graphql";
 
 const signUp = async (variables) =>
-  axios.post(API_URL, {
+  await axios.post(API_URL, {
     query: `
       mutation ($password: String!, $email: String!, $firstName: String!, $lastName: String!, $cellNumber: String!, $birthDate: String!) {
         signUp(password: $password, email: $email, firstName: $firstName, lastName: $lastName, cellNumber: $cellNumber, birthDate: $birthDate) {
@@ -15,7 +15,7 @@ const signUp = async (variables) =>
   });
 
 const signIn = async (variables) =>
-  axios.post(API_URL, {
+  await axios.post(API_URL, {
     query: `
       mutation ($email: String!, $password: String!) {
         signIn(email: $email, password: $password) {

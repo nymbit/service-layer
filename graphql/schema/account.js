@@ -6,6 +6,10 @@ const user = gql`
     account(id: ID!): Account
   }
 
+  extend type Mutation {
+    deleteAccount(id: ID!): Boolean!
+  }
+
   type Account {
     id: ID!
     user: User!

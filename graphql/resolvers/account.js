@@ -18,7 +18,17 @@ const resolvers = {
       }
     ),
   },
-
+  Mutation: {
+    deleteAccount: combineResolvers(
+      isAuthenticated,
+      isAccountOwner,
+      async (parent, { id }, { models }) => {
+        return await models.Account.destroy({
+          where: { id },
+        });
+      }
+    ),
+  },
   Account: {
     user: async (account, args, { models }) => {
       return await models.User.findByPk(account.userId);

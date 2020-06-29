@@ -13,7 +13,7 @@ const paymentMethod = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true,
       },
-    }
+    },
   });
 
   PaymentMethod.associate = (models) => {

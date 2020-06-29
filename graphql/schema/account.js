@@ -9,6 +9,7 @@ const user = gql`
   type Account {
     id: ID!
     user: User!
+    paymentMethods: [PaymentMethod!]
   }
 `;
 

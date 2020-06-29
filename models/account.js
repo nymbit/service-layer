@@ -4,6 +4,7 @@ const account = (sequelize) => {
   Account.associate = (models) => {
     Account.belongsTo(models.User);
     Account.hasMany(models.Tag, { onDelete: "CASCADE" });
+    Account.hasMany(models.PaymentMethod, { onDelete: "CASCADE" });
   };
 
   return Account;

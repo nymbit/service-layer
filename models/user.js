@@ -2,18 +2,6 @@ const bcrypt = require("bcrypt");
 
 const user = (sequelize, DataTypes) => {
   const User = sequelize.define("user", {
-    username: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        isLowercase: {
-          args: true,
-          msg: "Username must be lowercase.",
-        },
-      },
-    },
     email: {
       type: DataTypes.STRING,
       unique: true,
@@ -68,24 +56,11 @@ const user = (sequelize, DataTypes) => {
   });
 
   User.associate = (models) => {
-    User.hasMany(models.UserRole, { onDelete: "CASCADE" }),
-    User.hasMany(models.UserAttachment, { onDelete: "CASCADE" })
-    User.hasOne(models.Account, { onDelete: "CASCADE" })
+    User.hasMany(models.UserRole, { onDelete: "CASCADE" });
+    User.hasMany(models.UserAttachment, { onDelete: "CASCADE" });
+    User.hasOne(models.Account, { onDelete: "CASCADE" });
   };
 
-  User.findByLogin = async (login) => {
-    let user = await User.findOne({
-      where: { username: login },
-    });
-    if (!user) {
-      user = await User.findOne({
-        where: { email: login },
-      });
-    }
-    return user;
-  };
-
-  //hook
   User.beforeCreate(async (user) => {
     user.password = await user.generatePasswordHash();
   });

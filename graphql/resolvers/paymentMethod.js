@@ -1,27 +1,15 @@
 const { combineResolvers } = require("graphql-resolvers");
-const {
-  isAuthenticated,
-  isAccountOwner,
-  isPaymentMethodOwner,
-} = require("./authorization");
+const { omit } = require("lodash");
+const { isAuthenticated, isPaymentMethodOwner } = require("./authorization");
 
 const resolvers = {
-  Query: {
-    paymentMethods: combineResolvers(
-      isAuthenticated,
-      isAccountOwner,
-      async (parent, { accountId }, { models }) => {
-        return await models.PaymentMethod.findAll({ where: { accountId } });
-      }
-    ),
-  },
   Mutation: {
     createPaymentMethod: combineResolvers(
       isAuthenticated,
       async (parent, { name, token }, { currentUser: { id }, models }) => {
-        const account = models.Account.findOne({ where: { userId: id } });
+        const account = await models.Account.findOne({ where: { userId: id } });
         return await models.PaymentMethod.create({
-          accountId: account,
+          accountId: account.id,
           name,
           token,
         });
@@ -30,18 +18,15 @@ const resolvers = {
     updatePaymentMethod: combineResolvers(
       isAuthenticated,
       isPaymentMethodOwner,
-      async (parent, { id, name, token }, { models }) => {
-        return await models.PaymentMethod.update(
-          {
-            name,
-            token,
+      async (parent, args, { models }) => {
+        const result = await models.PaymentMethod.update(omit(args, "id"), {
+          where: {
+            id: args.id,
           },
-          {
-            where: {
-              id,
-            },
-          }
-        );
+          returning: true,
+          plain: true,
+        });
+        return result[1].dataValues;
       }
     ),
     deletePaymentMethod: combineResolvers(

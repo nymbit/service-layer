@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize')
+
 const tag = (sequelize, DataTypes) => {
   const Tag = sequelize.define("tag", {
     name: {
@@ -10,7 +12,7 @@ const tag = (sequelize, DataTypes) => {
     uuid: {
       type: DataTypes.UUID,
       allowNull: false,
-      defaultValue: sequelize.UUIDV4,
+      defaultValue: Sequelize.UUIDV4,
       validate: {
         notEmpty: true,
         isUUID: 4 //type 4
@@ -26,7 +28,7 @@ const tag = (sequelize, DataTypes) => {
   Tag.associate = (models) => {
     Tag.belongsTo(models.Account)
   };
-
+  
   return Tag;
 };
 

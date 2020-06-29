@@ -9,16 +9,16 @@ const user = gql`
 
   extend type Mutation {
     signUp(
-      username: String!
       email: String!
       password: String!
       firstName: String!
       lastName: String!
       cellNumber: String!
       birthDate: String!
+      role: String
     ): Token!
 
-    signIn(login: String!, password: String!): Token!
+    signIn(email: String!, password: String!): Token!
 
     deleteUser(id: ID!): Boolean!
   }
@@ -29,7 +29,6 @@ const user = gql`
 
   type User {
     id: ID!
-    username: String!
     email: String!
     firstName: String!
     lastName: String!

@@ -76,7 +76,6 @@ sequelize.sync({ force: isTest }).then(async () => {
 
 const seedDatabase = async () => {
   let user = await models.User.create({
-    username: "matthew",
     email: "matt@test.com",
     password: "matthew",
     firstName: "matthew",
@@ -90,7 +89,19 @@ const seedDatabase = async () => {
     userId: user.id,
   });
 
-  await models.Account.create({
+  const account = await models.Account.create({
     userId: user.id,
+  });
+
+  const paymentMethod = await models.PaymentMethod.create({
+    name: 'My debit card',
+    token: 'jhfuytuhsDFJKGXCVG',
+    accountId: account.id,
+  });
+
+  await models.Tag.create({
+    name: 'Bicycle tag',
+    accountId: account.id,
+    paymentMethodId: paymentMethod.id,
   });
 };

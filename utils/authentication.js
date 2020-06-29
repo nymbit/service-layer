@@ -13,10 +13,19 @@ async function getCurrentUser(request) {
 }
 
 async function createToken(user, expiresIn) {
-  const { id, email, username, role } = user;
-  return await jwt.sign({ id, email, username, role }, process.env.SECRET, {
-    expiresIn,
-  });
+  const { id, email, username, userRoles } = user;
+  return await jwt.sign(
+    {
+      id,
+      email,
+      username,
+      roles: userRoles,
+    },
+    process.env.SECRET,
+    {
+      expiresIn,
+    }
+  );
 }
 
 module.exports = { getCurrentUser, createToken };

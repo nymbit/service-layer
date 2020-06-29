@@ -1,10 +1,6 @@
 const { gql } = require("apollo-server-express");
 
 const paymentMethod = gql`
-  extend type Query {
-    paymentMethods(accountId: ID!): [PaymentMethod!]
-  }
-
   extend type Mutation {
     createPaymentMethod(
       name: String!

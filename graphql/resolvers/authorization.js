@@ -8,27 +8,54 @@ const isAuthenticated = (parent, args, { currentUser }) =>
 
 const isAdmin = combineResolvers(
   isAuthenticated,
-  (parent, args, { currentUser: { role } }) =>
-    role === "ADMIN"
+  (parent, args, { currentUser: { roles } }) => {
+    return roles.includes("ADMIN")
       ? skip
-      : new ForbiddenError("Restricted to users with ADMIN rights.")
+      : new ForbiddenError("Restricted to users with ADMIN rights.");
+  }
 );
 
-const isAccountOwner = (parent, { accountId }, { currentUser: {id}, models }) => {
-  const account = models.Account.findOne({ where: { userId: id } });
-  return accountId === account.id
+const isAccountOwner = async (parent, { id }, { currentUser, models }) => {
+  const account = await models.Account.findOne({
+    where: { userId: currentUser.id },
+  });
+
+  return id == account.id
     ? skip
     : new ForbiddenError("Not the owner of this account.");
 };
 
-const isPaymentMethodOwner = (parent, { id }, { currentUser, models }) => {
-  const paymentMethod = models.PaymentMethod.findByPk(id, { include: Account });
+const isPaymentMethodOwner = async (
+  parent,
+  { id },
+  { currentUser, models }
+) => {
+  const paymentMethod = await models.PaymentMethod.findByPk(id, {
+    include: models.Account,
+  });
 
-  if(!paymentMethod) return new ValidationError("Payment method does not exist.");
+  if (!paymentMethod)
+    return new ValidationError("Payment method does not exist.");
 
-  return paymentMethod.account.userId === currentUser.id
+  return paymentMethod.account.userId == currentUser.id
     ? skip
     : new ForbiddenError("Not the owner of this payment method.");
 };
 
-module.exports = { isAuthenticated, isAdmin, isAccountOwner, isPaymentMethodOwner };
+const isTagOwner = async (parent, { id }, { currentUser, models }) => {
+  const tag = await models.Tag.findByPk(id, { include: Account });
+
+  if (!tag) return new ValidationError("Tag does not exist.");
+
+  return tag.account.userId == currentUser.id
+    ? skip
+    : new ForbiddenError("Not the owner of this tag.");
+};
+
+module.exports = {
+  isAuthenticated,
+  isAdmin,
+  isAccountOwner,
+  isPaymentMethodOwner,
+  isTagOwner,
+};

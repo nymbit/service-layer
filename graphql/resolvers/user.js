@@ -1,4 +1,5 @@
 const auth = require("../../utils/authentication");
+const { omit } = require("lodash");
 const { combineResolvers } = require("graphql-resolvers");
 const { AuthenticationError, UserInputError } = require("apollo-server");
 const { isAdmin } = require("./authorization");
@@ -21,24 +22,30 @@ const resolvers = {
 
   Mutation: {
     signUp: async (parent, args, { models }) => {
-      const user = await models.User.create({
-        ...args,
-      });
+      const user = await models.User.create(omit(args, "role"));
 
       await models.Account.create({ userId: user.id });
+
+      user.userRoles = [args.role];
 
       return { token: auth.createToken(user, "30m") };
     },
 
-    signIn: async (parent, { login, password }, { models }) => {
-      const user = await models.User.findByLogin(login); //login is either username or email
+    signIn: async (parent, { email, password }, { models }) => {
+      const user = await models.User.findOne({
+        where: { email },
+        include: models.UserRole,
+      });
+
       if (!user)
         throw new UserInputError("No user found with these login credentials.");
 
       if (!(await user.validatePassword(password)))
         throw new AuthenticationError("Invalid password.");
 
-      return { token: auth.createToken(user, account, "30m") };
+      user.userRoles = user.userRoles.map((item) => item.role);
+
+      return { token: auth.createToken(user, "30m") };
     },
 
     deleteUser: combineResolvers(

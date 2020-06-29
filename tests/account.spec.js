@@ -36,16 +36,19 @@ describe("accounts", () => {
     });
 
     it("returns null when account cannot be found", async () => {
-      const expectedResult = {
-        data: {
-          account: null,
-        },
-      };
-      const result = await getAccount({ id: "42" }, this.token);
-      expect(result.data).to.eql(expectedResult);
+      const {
+        data: { errors },
+      } = await getAccount({ id: "42" }, this.token);
+      expect(errors[0].message).to.eql("Not the owner of this account.");
     });
   });
   describe("accounts: [Account]", () => {
+    it("returns error when reading all accounts without ADMIN role", async () => {
+      const {
+        data: { errors },
+      } = await getAccounts(this.token);
+      expect(errors[0].message).to.eql("Restricted to users with ADMIN rights.");
+    });
     it("returns a list of accounts with one item", async () => {
       const expectedResult = {
         data: {

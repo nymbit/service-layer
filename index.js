@@ -58,7 +58,7 @@ server.applyMiddleware({ app, path: "/graphql" });
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
-const isTest = !!process.env.TEST_DATABASE || true;
+const isTest = !!process.env.TEST_DATABASE;
 
 const port = process.env.PORT || 8000; //heroku environment variable (merged on deploy)
 

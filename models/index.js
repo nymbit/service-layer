@@ -11,8 +11,8 @@ if (process.env.DATABASE_URL) {
 } else {
   sequelize = new Sequelize(
     process.env.TEST_DATABASE || process.env.DATABASE,
-    process.env.DATABASE_USER,
-    process.env.DATABASE_PASSWORD,
+    "postgres", //username
+    "postgres", //password
     {
       dialect: "postgres",
     }

@@ -16,26 +16,32 @@ jobs:
       workDir: ~repo 
     steps: 
       - checkout 
-      - run: npm install
       - run: 
-          name: install dockerize 
+          name: Install dependencies
+          command: npm install
+      - run: 
+          name: Install dockerize 
           command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz 
           environment: 
             DOCKERIZE_VERSION: v0.3.0 
       - run: 
-          name: Wait for db 
+          name: Wait for database 
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: 
+      - run:
+          name: Start the server
           command: npm start
           background: true
         # wait for the server to start responding. We expect Bad Request 400 once it starts listening.
         # so override the shell and have the last command be the : { null } command to force exit code 0.
       - run:
+          name: Wait for server to start
           shell: /bin/sh
           command: |
             wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 http://localhost:8000/graphql
             :
-      - run: npm test
+      - run:
+          name: Run tests
+          command: npm test
 
 workflows:
     build-and-test:

@@ -3,10 +3,9 @@ const { expect } = require("chai");
 const { signIn, deleteUser, getUser, signUp } = require("./API/user");
 
 describe("users", () => {
-  describe("signUp(username: String!, password: String! ...): Token", () => {
+  describe("signUp(password: String! ...): Token", () => {
     it("returns a token after successfully creating user", async () => {
       const result = await signUp({
-        username: "joe",
         password: "joebrown",
         email: "joe@test.com",
         firstName: "joe",
@@ -18,7 +17,7 @@ describe("users", () => {
         .to.haveOwnProperty("data")
         .to.haveOwnProperty("signUp")
         .to.haveOwnProperty("token")
-        .to.be.a("string");
+        .to.be.a("string");  
     });
   });
 
@@ -28,7 +27,6 @@ describe("users", () => {
         data: {
           user: {
             id: "1",
-            username: "matthew",
             email: "matt@test.com",
           },
         },
@@ -57,7 +55,7 @@ describe("users", () => {
           },
         },
       } = await signIn({
-        login: "joe",
+        email: "joe@test.com",
         password: "joebrown",
       });
       const {

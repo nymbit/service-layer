@@ -10,7 +10,7 @@ const getAccount = async (variables, token) =>
       query ($id: ID!) {
         account(id: $id) {
           user {
-              username
+              email
           }
         }
       }
@@ -32,11 +32,11 @@ const getAccounts = async (token) =>
       query {
         accounts {
           user {
-              username
+            email
           }
         }
       }
-    `
+    `,
     },
     {
       headers: {

@@ -2,6 +2,7 @@
 const { expect } = require("chai");
 const { getAccount, getAccounts } = require("./API/account");
 const { signIn } = require("./API/user");
+require("./user.spec");
 
 describe("accounts", () => {
   before(() => {
@@ -13,7 +14,7 @@ describe("accounts", () => {
           },
         },
       } = await signIn({
-        login: "matthew",
+        email: "matt@test.com",
         password: "matthew",
       });
       this.token = token;
@@ -26,7 +27,7 @@ describe("accounts", () => {
         data: {
           account: {
             user: {
-              username: "matthew",
+              email: "matt@test.com",
             },
           },
         },
@@ -45,9 +46,21 @@ describe("accounts", () => {
   describe("accounts: [Account]", () => {
     it("returns error when reading all accounts without ADMIN role", async () => {
       const {
+        data: {
+          data: {
+            signIn: { token },
+          },
+        },
+      } = await signIn({
+        email: "joe@test.com",
+        password: "joebrown",
+      });
+      const {
         data: { errors },
-      } = await getAccounts(this.token);
-      expect(errors[0].message).to.eql("Restricted to users with ADMIN rights.");
+      } = await getAccounts(token);
+      expect(errors[0].message).to.eql(
+        "Restricted to users with ADMIN rights."
+      );
     });
     it("returns a list of accounts with one item", async () => {
       const expectedResult = {
@@ -55,7 +68,12 @@ describe("accounts", () => {
           accounts: [
             {
               user: {
-                username: "matthew",
+                email: "matt@test.com",
+              },
+            },
+            {
+              user: {
+                email: "joe@test.com",
               },
             },
           ],

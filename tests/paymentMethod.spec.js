@@ -17,7 +17,7 @@ describe("payment methods", () => {
           },
         },
       } = await signIn({
-        login: "matthew",
+        email: "matt@test.com",
         password: "matthew",
       });
       this.token = token;
@@ -28,7 +28,7 @@ describe("payment methods", () => {
     it("creates a payment method", async () => {
       const expectedResult = {
         data: {
-          paymentMethod: {
+          createPaymentMethod: {
             name: "My credit card",
           },
         },
@@ -42,26 +42,6 @@ describe("payment methods", () => {
   });
   describe("updatePaymentMethod(id: ID!, name: String): PaymentMethod!", () => {
     it("return error as payment method does not exist", async () => {
-        const expectedResult = {
-          data: {
-            accounts: [
-              {
-                user: {
-                  username: "My updated credit card",
-                },
-              },
-            ],
-          },
-        };
-        const {
-            data: { errors },
-          } = await updatePaymentMethod({
-          id: 42,
-          name: "My updated credit card",
-        });
-        expect(errors[0].message).to.eql("Payment method does not exist.");
-      });
-    it("updates a payment method", async () => {
       const expectedResult = {
         data: {
           accounts: [
@@ -73,10 +53,32 @@ describe("payment methods", () => {
           ],
         },
       };
-      const result = await updatePaymentMethod({
-        id: 2,
-        name: "My updated credit card",
-      });
+      const {
+        data: { errors },
+      } = await updatePaymentMethod(
+        {
+          id: 42,
+          name: "My updated credit card",
+        },
+        this.token
+      );
+      expect(errors[0].message).to.eql("Payment method does not exist.");
+    });
+    it("updates a payment method", async () => {
+      const expectedResult = {
+        data: {
+          updatePaymentMethod: {
+            name: "My updated credit card",
+          },
+        },
+      };
+      const result = await updatePaymentMethod(
+        {
+          id: 2,
+          name: "My updated credit card",
+        },
+        this.token
+      );
       expect(result.data).to.eql(expectedResult);
     });
   });

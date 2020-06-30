@@ -12,7 +12,7 @@ describe("accounts", function () {
       email: "matt@test.com",
       password: "matthew",
     });
-    console.log(`SIGN IN RESPONSE: ${result.data}`)
+    console.log(`SIGN IN RESPONSE: ${result.message}`)
     return (this.token = token);
   });
   describe("account(id: ID!): Account", () => {

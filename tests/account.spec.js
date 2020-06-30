@@ -2,24 +2,18 @@
 const { expect } = require("chai");
 const { getAccount, getAccounts } = require("./API/account");
 const { signIn } = require("./API/user");
-const { reject } = require("lodash");
 require("./user.spec");
 
 describe("accounts", () => {
   before(() => {
     return new Promise(async (resolve) => {
       try {
-        const {
-          data: {
-            data: {
-              signIn: { token },
-            },
-          },
-        } = await signIn({
+        const result = await signIn({
           email: "matt@test.com",
           password: "matthew",
         });
-        this.token = token;
+        console.log(`SIGN IN OUTPUT: ${result}`)
+        this.token = result;
         resolve();
       } catch (error) {
         console.log(`AN ERROR OCCURRED: ${error}`);

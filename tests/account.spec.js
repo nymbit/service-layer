@@ -12,8 +12,8 @@ describe("accounts", () => {
           email: "matt@test.com",
           password: "matthew",
         });
-        console.log(`SIGN IN OUTPUT: ${result}`)
-        this.token = result;
+        console.log(`SIGN IN OUTPUT: ${JSON.stringify(result)}`)
+        // this.token = result;
         resolve();
       } catch (error) {
         console.log(`AN ERROR OCCURRED: ${error}`);

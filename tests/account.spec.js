@@ -4,7 +4,9 @@ const { getAccount, getAccounts } = require("./API/account");
 const { signIn } = require("./API/user");
 require("./user.spec");
 
-describe("accounts", () => {
+describe("accounts", function () {
+  this.timeout(5000);
+
   before(async () => {
     const {
       data: {

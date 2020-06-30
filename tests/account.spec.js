@@ -8,16 +8,11 @@ describe("accounts", function () {
   this.timeout(5000);
 
   before(async () => {
-    const {
-      data: {
-        data: {
-          signIn: { token },
-        },
-      },
-    } = await signIn({
+    const result = await signIn({
       email: "matt@test.com",
       password: "matthew",
     });
+    console.log(`SIGN IN RESPONSE: ${result.data}`)
     return (this.token = token);
   });
   describe("account(id: ID!): Account", () => {

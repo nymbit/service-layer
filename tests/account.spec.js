@@ -22,8 +22,8 @@ describe("accounts", () => {
         this.token = token;
         resolve();
       } catch (error) {
-        console.log(error)
-        reject(error)
+        console.log(error);
+        resolve();
       }
     });
   });

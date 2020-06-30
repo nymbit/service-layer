@@ -5,21 +5,18 @@ const { signIn } = require("./API/user");
 require("./user.spec");
 
 describe("accounts", () => {
-  before(() => {
-    return new Promise(async (resolve) => {
-      try {
-        const result = await signIn({
-          email: "matt@test.com",
-          password: "matthew",
-        });
-        console.log(`SIGN IN OUTPUT: ${JSON.stringify(result)}`)
-        // this.token = result;
-        resolve();
-      } catch (error) {
-        console.log(`AN ERROR OCCURRED: ${error}`);
-        resolve();
-      }
+  before(async () => {
+    const {
+      data: {
+        data: {
+          signIn: { token },
+        },
+      },
+    } = await signIn({
+      email: "matt@test.com",
+      password: "matthew",
     });
+    return (this.token = token);
   });
   describe("account(id: ID!): Account", () => {
     it("returns an account", async () => {
